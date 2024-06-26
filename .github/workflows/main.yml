@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [macOS-latest] # ubuntu-latest, windows-latest, 
     steps:
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,7 +24,7 @@ jobs:
           npm install
           npm run make
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app-${{ runner.os }}
           path: out/make/*
@@ -35,11 +35,13 @@ jobs:
     permissions: write-all
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag }}
           draft: true
           prerelease: true
-          files: out/make/*
+          files: dist
