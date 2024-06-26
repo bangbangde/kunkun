@@ -44,4 +44,4 @@ jobs:
           tag_name: ${{ inputs.tag }}
           draft: true
           prerelease: true
-          files: dist
+          files: dist/*
