@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest] # ubuntu-latest, windows-latest, 
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -20,9 +20,13 @@ jobs:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
       - name: npm install and build
-        run: |
-          npm install
-          npm run make
+        run: npm install
+      - name: macos make
+        if: matrix.os == 'macOS-latest'
+        run: npm run make -- --arch="ia32,x64"
+      - name: other make
+        if: matrix.os != 'macOS-latest'
+        run: npm run make
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
